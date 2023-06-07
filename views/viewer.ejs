@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://brobin.github.io/hacker-bootstrap/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>ThirtyOne Call</title>
+    <link href="/brobin_files/hacker.css" rel="stylesheet">
+    <script>
+		var name = "<%= roomId %>";
+	</script>
+<script>
+        const ROOM_ID = "<%= roomId %>";
+       
+</script>
+      <script defer src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+     
+    <style>
+    .tall-row {
+        margin-top: 40px;
+    }
+    .modal {
+        position: relative;
+        top: auto;
+        right: auto;
+        left: auto;
+        bottom: auto;
+        z-index: 1;
+        display: block;
+    }
+    .scrollit {
+    overflow:scroll;
+    height:300px;
+    width:300px;
+    
+}   
+    </style>
+</head>
+
+<body>
+
+   
+
+  
+
+    <div class="row">
+        
+            
+          
+        <!-- Jumbotron -->
+     
+            <div class="col-md-9">
+                <h1>Video Call @ <%= roomId %>'s room</h1>
+                
+                    
+                    <div class="card col-md-3">
+                      <div class="card-header p-0" id="grid1">
+                        <img id="nobodythere1"
+                          src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif"
+                          alt="" class="w-100">
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title"><%= roomId %></h5>
+                      </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="card text-center  col-md-3">
+                      <div class="card-header p-0" id="grid2">
+                        
+                        <img id="nobodythere2"
+                          src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif"
+                          alt="" class="w-100">
+                      </div>
+                      <div class="card-body">
+                        <h5 class="card-title"><%= guestuser %></h5>
+                      
+                      </div>
+                      
+                    </div>
+            
+                
+    
+            </div>
+<div class="col-md-3">
+    <div class="row tall-row">
+        <div class="col-lg-12">
+            <h1>Chat</h1>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="scrollit">
+            <table style="overflow-y:scroll;"  class="table table-striped table-hover ">
+                <thead>
+                    <tr>
+                        <th>Messages</th>
+                        
+                    </tr>
+                </thead>
+                
+                <tbody id="messages">
+                    
+                </tbody>
+            </table> 
+        </div></div>
+            <form action="">
+                <input id="m" placeholder="Enter your message..." autocomplete="off" required /><button type="submit" class="btn btn-success">Send</button>
+              </form>
+        </div>
+    </div>
+
+    <ul id="messages"></ul>
+    
+
+           
+        </div>
+
+        <div class="row tall-row">
+            <div class="col-md-12">
+                <p>Written by th3d1gger</a>. © 2023</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/brobin_files/jquery.min.js.download"></script>
+    <script src="/brobin_files/bootstrap.min.js.download"></script>
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="/js/viewer.js" defer></script>
+    <!-- Github stars script -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+   
+
+
+</body></html>

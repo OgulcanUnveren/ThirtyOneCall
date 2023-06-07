@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ThirtyOne Call</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600");
+body {
+  font-family: "Open Sans", sans-serif;
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+form {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.error-message {
+  color: #ff0000;
+  font-size: 12px;
+  display: block;
+  margin-top: 5px;
+}
+  </style>
+     <link href="/brobin_files/hacker.css" rel="stylesheet">
+  </head>
+<body>
+  <div class="col-md-4"> 
+  <form id="contact-form" method="post" action="/call">
+  
+    <div class="form-group">
+      <label for="email">Call user:</label>
+      <input type="text" id="username" name="username" >
+      <label for="email">Your username:</label>
+      <input type="text" id="yusername" name="yusername" >
+      <span class="error-message" id="email-error"></span>
+    </div>
+    <button  style="color: white;" type="submit">Go to Room</button>
+  </form>
+</div>
+  <br><br><br><br>
+  
+  
+   <div class="col-md-4"> 
+    <div class="form-group">
+      <label for="email">Main Screen:</label>
+      <input type="text" id="gousername" name="username" >
+      <span class="error-message" id="email-error"></span>
+    </div>
+    <button type="submit" style="color: white;" onclick="hrefit()">Go to your Room</button>
+  </div>
+<script>
+  function hrefit(){
+    username = document.getElementById('gousername');
+    window.location.href = "/mainroom/"+username.value;
+  }
+</script>
+</body>
+</html>
