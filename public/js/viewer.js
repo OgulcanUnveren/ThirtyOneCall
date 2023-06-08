@@ -56,21 +56,36 @@ navigator.mediaDevices.getUserMedia({
     call.answer(stream)
     const video = document.createElement('video')
     call.on('stream', userVideoStream => {
-        
+      console.log("user-cam-activated");
+      playsound();        
         addVideoStream(video, userVideoStream)
     })
   })
-
-  socket.on('user-connected', userId => {
+function playsound()
+{
+  var audio = new Audio('/ring.mp3');
+    audio.play();
+} 
+ socket.on('user-connected', userId => {
+    console.log("user-connected");
+    playsound();
     connectToNewUser(userId, stream)
   })
 })
 
 socket.on('user-disconnected', userId => {
+  console.log("user-disconnected");
+  playdisconnect();
   if (peers[userId]) peers[userId].close()
 })
+function playdisconnect()
+{
+  var audio = new Audio('/disconnect.mp3');
+    audio.play();
+} 
 
 myPeer.on('open', id => {
+
   socket.emit('join-room', ROOM_ID, id)
 })
 
