@@ -64,12 +64,11 @@ button {
 <body>
   <div class="col-md-4"> 
   <form id="contact-form" method="post" action="/call">
-  
+    
     <div class="form-group">
+      <h1>Hi <%= username %></h1>
       <label for="email">Call user:</label>
       <input type="text" id="username" name="username" >
-      <label for="email">Your username:</label>
-      <input type="text" id="yusername" name="yusername" >
       <span class="error-message" id="email-error"></span>
     </div>
     <button  style="color: white;" type="submit">Go to Room</button>
@@ -81,7 +80,7 @@ button {
    <div class="col-md-4"> 
     <div class="form-group">
       <label for="email">Main Screen:</label>
-      <input type="text" id="gousername" name="username" >
+      <input type="text" disabled id="gousername" name="username" value="<%= username %>" >
       <span class="error-message" id="email-error"></span>
     </div>
     <button type="submit" style="color: white;" onclick="hrefit()">Go to your Room</button>
