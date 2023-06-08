@@ -11,8 +11,13 @@ const jwt = require("jsonwebtoken")
 const auth = require("../middleware/authJwt");
 var cookieParser = require('cookie-parser')
 const { authJwt } = require("../middleware");
+const config = require("../config/auth.config");
+const db = require("../models");
 
+const User = db.user;
+const Role = db.role;
 
+const Op = db.Sequelize.Op;
 
 // parse application/x-www-form-urlencoded
 
@@ -32,81 +37,39 @@ module.exports = (app) => {
             next()
         }
     })
-    // Register
-    // app.use(function(req, res, next) {
-    //   res.header(
-    //     "Access-Control-Allow-Headers",
-    //     "x-access-token, Origin, Content-Type, Accept"
-    //   );
-    //   next();
-    // });
-    // app.get("/welcome", authJwt.verifyToken, (req, res) => {
-    //   res.status(200).send("Welcome 🙌 ");
-    // });
-  
-    // app.get("/api/test/all", usercontroller.allAccess);
-  
-    // app.get(
-    //   "/api/test/user",
-    //   [authJwt.verifyToken],
-    //   usercontroller.userBoard
-    // );
-  
-    // app.get(
-    //   "/api/test/mod",
-    //   [authJwt.verifyToken, authJwt.isModerator],
-    //   usercontroller.moderatorBoard
-    // );
-  
-    // app.get(
-    //   "/api/test/admin",
-    //   [authJwt.verifyToken, authJwt.isAdmin],
-    //   usercontroller.adminBoard
-    // );
-        
     
-   
-    // // Login
-    // // app.post("/login", async (req, res) => {
-
-    // //     // Our login logic starts here
-    //     try {
-    //       // Get user input
-    //       const { email, password } = req.body;
-    //       console.log(req.body);
-    //       // Validate user input
-    //       if (!(email && password)) {
-    //         res.status(400).send("All input is required");
-    //       }
-    //       // Validate if user exist in our database
-    //       const user = await User.findOne({ email });
-      
-    //       if (user && (await bcrypt.compare(password, user.password))) {
-    //         // Create token
-    //         const token = jwt.sign(
-    //           { user_id: user._id, email },
-    //           process.env.TOKEN_KEY,
-    //           {
-    //             expiresIn: "2h",
-    //           }
-    //         );
-      
-    //         // save user token
-    //         user.token = token;
-    //         res.cookie('x-access-token',token)
-    //         // user
-    //         res.redirect('/');
-    //         //res.status(200).json(user);
-    //       }
-    //       res.status(400).send("Invalid Credentials");
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //     // Our register logic ends here
-    //   });
-      // app.get('/', (req, res) => {
-    //     res.redirect(`/${uuidV4()}`)
-    //   })
+    app.get("/", authJwt.verifyToken, function(req,res,next) {
+      jwt.verify(req.cookies['x-access-token'],config.secret , function(err, decodedToken) {
+        if(err) { /* handle token err */ }
+        else {
+          console.log(decodedToken);
+          User.findOne({
+            where: {
+              id: decodedToken.id
+            }
+          })
+          .then(user => {
+              if (!user) {
+                return res.status(404).send({ message: "User Not found." });
+              }
+        
+              var authorities = [];
+              user.getRoles().then(roles => {
+                for (let i = 0; i < roles.length; i++) {
+                  authorities.push("ROLE_" + roles[i].name.toUpperCase());
+                }});
+             res.render('streamer',{
+                 id: user.id,
+                 username: user.username,
+                 email: user.email,
+                 roles: authorities,
+                 accessToken: req.cookies['x-access-token']
+               });
+            
+        });
+        }
+     });
+    });
     app.post("/call", authJwt.verifyToken,function(req, res){
       //this is a callback function
       var username = req.body.username;
