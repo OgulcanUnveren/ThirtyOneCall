@@ -4,7 +4,8 @@ const express = require('express')
 const app = express()
 const httpolyglot = require('httpolyglot')
 const https = require('https')
-
+require("dotenv").config();
+require("../config/database").connect();
 
 // insert your own ssl certificate and keys
 const options = {
