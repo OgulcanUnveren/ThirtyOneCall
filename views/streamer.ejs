@@ -5,88 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>ThirtyOne Call</title>
-  <style>
-    @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,600");
-body {
-  font-family: "Open Sans", sans-serif;
-  background-color: #f2f2f2;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-form {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 5px;
-}
-
-input,
-textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-}
-
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.error-message {
-  color: #ff0000;
-  font-size: 12px;
-  display: block;
-  margin-top: 5px;
-}
-  </style>
      <link href="/brobin_files/hacker.css" rel="stylesheet">
   </head>
 <body>
-  <div class="col-md-4"> 
-  <form id="contact-form" method="post" action="/call">
+  <div class="row">
+    <div class="col-lg-3"></div>
+            <div class="col-lg-6">
+                
+              <form id="contact-form" method="post" action="/mainroom" class="form-horizontal"> 
+    <div class="form-group">
+      
+      
+      <span class="error-message" id="email-error"></span>
+    </div>
     
-    <div class="form-group">
-      <h1>Hi <%= username %></h1>
-      <label for="email">Call user:</label>
-      <input type="text" id="username" name="username" >
-      <span class="error-message" id="email-error"></span>
-    </div>
-    <button  style="color: white;" type="submit">Go to Room</button>
-  </form>
-</div>
-  <br><br><br><br>
-  
-  
-   <div class="col-md-4"> 
-    <form id="contact-form" method="post" action="/mainroom"> 
-    <div class="form-group">
-      <label for="email">Main Screen:</label>
-      <input type="text" disabled id="gousername" name="username" value="<%= username %>" >
-      <span class="error-message" id="email-error"></span>
-    </div>
-    <button type="submit" style="color: white;" >Go to your Room</button>
  
 </form>
-</div>
+              <div class="well">
+                    <form class="form-horizontal" method="post" action="/mainroom">
+
+
+                      <fieldset>
+                            <legend>Main Room:</legend>
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-lg-2 control-label">Your Room</label>
+                                <div class="col-lg-10">
+                                 <input type="text" style="color: aliceblue;" disabled id="gousername" name="username" value="<%= username %>" >
+                                </div>
+                            </div>
+                           
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                 
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                    <form class="form-horizontal" method="post" action="/call">
+
+
+                      <fieldset>
+                            <legend>Go After Others:</legend>
+                            <div class="form-group">
+                                <label for="inputEmail" class="col-lg-2 control-label">Call user</label>
+                                
+      
+                                <div class="col-lg-10">
+                                 <input type="text" id="username" name="username" >
+                                </div>
+                            </div>
+                           
+                            <div class="form-group">
+                                <div class="col-lg-10 col-lg-offset-2">
+                                 
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+ 
+  
+ 
 </body>
 </html>

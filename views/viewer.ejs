@@ -9,7 +9,7 @@
      <link href="/brobin_files/hacker.css" rel="stylesheet"> 
     <script>
 		var name = "<%= roomId %>";
-        const callid = "<%= callid %>";
+        
 	</script>
 <script>
         const ROOM_ID = "<%= roomId %>";
@@ -18,7 +18,8 @@
       <script defer src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
      
     <style>
-    .tall-row {
+
+.tall-row {
         margin-top: 40px;
     }
     .modal {
@@ -42,10 +43,10 @@
 
 html, body {
   width: 100%;
-  height: 1000vh;
+  height: 1080px;
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  
 }
 
 button {
@@ -152,6 +153,7 @@ a {
 }
 
 .right-side {
+  display: none;
   margin-left: auto;
   flex-basis: 400px;
   height: 100%;
@@ -575,6 +577,7 @@ a {
   }
 
   .right-side {
+    display: none;
     position: absolute;
     right: 0px;
     background-color: var(--chat-background);
@@ -598,7 +601,12 @@ a {
   margin-right: 30px;
  }
  #grid2{
-  margin-top: -210px;
+  margin-top: 0px;
+ }
+ .well {
+  height: 250px;
+    width: 210px;
+
  }
   .app-main {
     padding: 72px 16px 16px 16px;
@@ -681,32 +689,84 @@ a {
                 
                </button>
                <button onclick="switchMedia()">Switch</button>
+               <button onclick="showorhidechat()">Live chat</button>
                
              </div>
            </div>
-           <div class="app-main">
-           
+           <div style="display: none;" id="tight" class="app-main">
+            <div class="row">
+              <div class="col-lg-6">
+                  
+            
+                <div class="well">
+                      <form class="form-horizontal">
+  
+  
+                        <fieldset>
+                          <legend><%= roomId %>:</legend>
+                          <div class="video-participant" id="grid1">
+                 
+                            
+                            <img id="nobodythere1" style="width: 150px!important;height: 150px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif"" alt="participant">
+                          </div>
+                          </fieldset>
+                      </form>
+                      
+                  </div>
+              </div>
+              
+          </div>
+        
+          
+          <div class="row">
+            <div class="col-lg-6">
+                
+          
+              <div class="well">
+                 
+                    <form class="form-horizontal" method="post" action="/call">
+
+
+                      <fieldset>
+                            <legend><%= username %>:</legend>
+                            <div class="video-participant" id="grid2">
+                            
+                              <img id="nobodythere2" style="width: 150px!important;height: 150px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif" alt="participant">
+                              
+                             </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+ 
+            
+            
+           </div>
+           <div style="display: none;" id="wide" class="app-main">
+            
+   
             <div class="video-call-wrapper">
-               <div class="video-participant" id="grid1">
+               <div class="video-participant" id="grid11">
                  
                  <a href="#" class="name-tag"><%= roomId %></a>
-                 <img id="nobodythere1" style="width: 250px!important;height: 250px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif"" alt="participant">
+                 <img id="nobodythere11" style="width: 250px!important;height: 250px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif"" alt="participant">
                </div>
                <div class="col-md-3"></div>
                
-               <div class="video-participant" id="grid2">
+               <div class="video-participant" id="grid22">
                  <a href="#" class="name-tag"><%= username %></a>
-                 <img id="nobodythere2" style="width: 250px!important;height: 250px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif" alt="participant">
+                 <img id="nobodythere22" style="width: 250px!important;height: 250px!important;" src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif" alt="participant">
                  
                 </div>
                
              </div>
             
            </div>
-           
         
-          <div class="right-side">
-            <button class="btn-close-right">
+          <div  id="right-side" class="right-side">
+            <button id="closebutton" class="btn-close-right">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-x-circle" viewBox="0 0 24 24">
                 <defs></defs>
                 <circle cx="12" cy="12" r="10"></circle>
@@ -739,23 +799,46 @@ a {
 
     <script src="/brobin_files/jquery.min.js.download"></script>
     <script src="/brobin_files/bootstrap.min.js.download"></script>
-    <script src="/socket.io/socket.io.js" defer></script>
-    <script src="/js/viewer.js" defer></script>
+    
     <!-- Github stars script -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
    <script>
+    function showorhidechat(){
+    const box = document.getElementById("right-side");
+    var valuee =box.classList.value
+    if(valuee.includes("show")){
+      $("#right-side").removeClass("show");
+    }
+    else {
+      $("#right-side").addClass("show");
+    }
+  }
     $(document).ready(function(){
+   
+      
+        if ($(window).width() < 960) {
+   $("#tight").css('display',"block");
+   $("#wide").css('display',"none");
+}
+else {
+    
+  $("#tight").css('display',"none");
+  $("#wide").css('display',"block");
+}
   $('button.mode-switch').click(function(){
     $('body').toggleClass('dark');
   });
   
-  $(".btn-close-right").click(function () {
-    $(".right-side").removeClass("show");
-    $(".expand-btn").addClass("show");
+
+  
+  $("#closebutton").click(function () {
+   console.log("test");
+    $("#right-side").removeClass("show");
+    $("#expand-btn").addClass("show");
   });
   
-  $(".expand-btn").click(function () {
-    $(".right-side").addClass("show");
+  $("#expand-btn").click(function () {
+    $("#right-side").addClass("show");
     $(this).removeClass("show");
   });
 });
@@ -775,5 +858,6 @@ function openFullscreen(myVideo) {
   }
    </script>
 
-
+<script src="/socket.io/socket.io.js" defer></script>
+    <script src="/js/viewer.js" defer></script>
 </body></html>

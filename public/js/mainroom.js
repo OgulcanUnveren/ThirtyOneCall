@@ -1,14 +1,28 @@
 const socket = io('/')
-const videoGrid = document.getElementById('grid2')
+if (window.innerWidth < 960) {
+  var videoGrid = document.getElementById('grid2')
+  var myVideogrid = document.getElementById('grid1');
+  var picmine = $("#nobodythere1");
+  var picother = $("#nobodythere2");
+  var widther = 'width:150px!important;'  
+}
+else{
+  
+  var videoGrid = document.getElementById('grid22')
+  var myVideogrid = document.getElementById('grid11');
+  var picmine = $("#nobodythere11");
+  var picother = $("#nobodythere22");
+  var widther = 'width:300px!important;'  
+}
 let localStream = null;
 let constraints = {
   audio: true,
   video: {
       width: {
-          max: 300
+          max: 250
       },
       height: {
-          max: 300
+          max: 250
       }
   }
 }
@@ -60,11 +74,11 @@ const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 }
 )
 
-const myVideogrid = document.getElementById('grid1');
+
 const myVideo = document.createElement('video');
 myVideo.setAttribute("onclick", "openFullscreen(this)");
-
-myVideo.setAttribute("style",'height:400px!important;width:350px!important;')
+myVideo.id = "myvideo";
+myVideo.setAttribute("style",widther)
 myVideogrid.append(myVideo);
 myVideo.muted = true
 const peers = {}
@@ -75,7 +89,7 @@ navigator.mediaDevices.getUserMedia({
   localStream = stream;
   localVideo = myVideo;
   addmyVideoStream(myVideo, stream)
-  $("#nobodythere1").remove();
+  picmine.remove();
   myPeer.on('call', call => {
     
     call.answer(stream)
@@ -118,8 +132,8 @@ function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
-
-  video.setAttribute("style",'height:400px!important;width:350px!important;')
+  
+  video.setAttribute("style",widther)
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream)
   })
@@ -141,7 +155,7 @@ function addmyVideoStream(video, stream) {
   
 }
 function addVideoStream(video, stream) {
-    $("#nobodythere2").remove();
+    picother.remove();
     console.log("addedtheirs");
   video.srcObject = stream
  

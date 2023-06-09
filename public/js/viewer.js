@@ -18,7 +18,24 @@ constraints.video.facingMode = {
   ideal: "user"
 }
 
-const videoGrid = document.getElementById('grid1')
+
+if (window.innerWidth < 960) {
+  var videoGrid = document.getElementById('grid1')
+  var myVideogrid = document.getElementById('grid2');
+  var picmine = $("#nobodythere2");
+  var picother = $("#nobodythere1");
+  var widther = 'width:150px!important;'  
+}
+else{
+  
+  var videoGrid = document.getElementById('grid11')
+  var myVideogrid = document.getElementById('grid22');
+  var picmine = $("#nobodythere22");
+  var picother = $("#nobodythere11");
+  var widther = 'width:300px!important;'  
+}
+
+
 
 const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 {url:'stun:stun.ekiga.net'},
@@ -55,7 +72,7 @@ const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 	username: '28224511:1379330808'
 }
 )
-const myVideogrid = document.getElementById('grid2');
+
 const myVideo = document.createElement('video');
 myVideo.setAttribute("onclick", "openFullscreen(this)");
 myVideo.id= "myvideo";
@@ -70,7 +87,7 @@ navigator.mediaDevices.getUserMedia({
   localStream = stream;
   localVideo = myVideo;
   addmyVideoStream(myVideo, stream)
-  $("#nobodythere2").remove();
+  picmine.remove();
   myPeer.on('call', call => {
     
     call.answer(stream)
@@ -149,7 +166,7 @@ function addmyVideoStream(video, stream) {
   
 }
 function addVideoStream(video, stream) {
-    $("#nobodythere1").remove();
+    picother.remove();
     console.log("addedtheirs");
   video.srcObject = stream
  
