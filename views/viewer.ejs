@@ -9,6 +9,7 @@
     <link href="/brobin_files/hacker.css" rel="stylesheet">
     <script>
 		var name = "<%= roomId %>";
+        const callid = "<%= callid %>";
 	</script>
 <script>
         const ROOM_ID = "<%= roomId %>";
@@ -73,8 +74,14 @@
                           alt="" class="w-100">
                       </div>
                       <div class="card-body">
-                        <h5 class="card-title"><%= guestuser %></h5>
-                      
+                        <h5 class="card-title"><%= username %></h5>
+                        <div style="display:block">
+                            <button id="switchButton" class="btn btn-success" onclick="switchMedia()">Switch
+                                Camera</button>
+                            <button id="muteButton" class="btn btn-success" onclick="toggleMute()">Unmuted</button>
+                            <button id="vidButton" class="btn btn-success" onclick="toggleVid()">Video Enabled</button>
+                        </div>
+    
                       </div>
                       
                     </div>

@@ -78,18 +78,15 @@ button {
   
   
    <div class="col-md-4"> 
+    <form id="contact-form" method="post" action="/mainroom"> 
     <div class="form-group">
       <label for="email">Main Screen:</label>
       <input type="text" disabled id="gousername" name="username" value="<%= username %>" >
       <span class="error-message" id="email-error"></span>
     </div>
-    <button type="submit" style="color: white;" onclick="hrefit()">Go to your Room</button>
-  </div>
-<script>
-  function hrefit(){
-    username = document.getElementById('gousername');
-    window.location.href = "/mainroom/"+username.value;
-  }
-</script>
+    <button type="submit" style="color: white;" >Go to your Room</button>
+ 
+</form>
+</div>
 </body>
 </html>

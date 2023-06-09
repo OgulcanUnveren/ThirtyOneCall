@@ -1,11 +1,30 @@
 const socket = io('/')
 const videoGrid = document.getElementById('grid2')
 let localStream = null;
+let constraints = {
+  audio: true,
+  video: {
+      width: {
+          max: 300
+      },
+      height: {
+          max: 300
+      }
+  }
+}
+
+
+
+constraints.video.facingMode = {
+  ideal: "user"
+}
+
 /**
  * All peer connections
  */
 
 const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
+
 {url:'stun:stun.ekiga.net'},
 {url:'stun:stun.fwdnet.net'},
 {url:'stun:stun.ideasip.com'},
@@ -41,23 +60,6 @@ const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 }
 )
 
-let constraints = {
-  audio: true,
-  video: {
-      width: {
-          max: 300
-      },
-      height: {
-          max: 300
-      }
-  }
-}
-
-
-
-constraints.video.facingMode = {
-  ideal: "user"
-}
 const myVideogrid = document.getElementById('grid1');
 const myVideo = document.createElement('video');
 myVideo.setAttribute("onclick", "openFullscreen(this)");

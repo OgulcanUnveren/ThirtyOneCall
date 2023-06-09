@@ -13,7 +13,7 @@ var cookieParser = require('cookie-parser')
 const { authJwt } = require("../middleware");
 const config = require("../config/auth.config");
 const db = require("../models");
-
+const Call = db.call;
 const User = db.user;
 const Role = db.role;
 
@@ -76,12 +76,129 @@ module.exports = (app) => {
       console.log(username);
       var guestuser = req.body.yusername;
       console.log(guestuser);
+      
+      Call.findOne({
+        where: {
+          host: username
+        }
+      })
+      .then(call => {
+          if (!call) {
+            jwt.verify(req.cookies['x-access-token'],config.secret , function(err, decodedToken) {
+              if(err) { /* handle token err */ }
+              else {
+                console.log(decodedToken);
+                User.findOne({
+                  where: {
+                    username: username
+                  }
+                })
+                .then(user => {
+                  
+                  if (!user) {
+                    return res.status(404).send({ message: "User Not found." });
+                  }
+                })
+                User.findOne({
+                  where: {
+                    id: decodedToken.id
+                  }
+                })
+                .then(user => {
+                    if (!user) {
+                      return res.status(404).send({ message: "User Not found." });
+                    }
+              
+                    var authorities = [];
+                    user.getRoles().then(roles => {
+                      for (let i = 0; i < roles.length; i++) {
+                        authorities.push("ROLE_" + roles[i].name.toUpperCase());
+                      }});
+                      Call.create({
+                        host: username,
+                        guest: user.username
+                      })
+                      .then(call => {
+                        
+                      Call.findOne({
+                        where: {
+                          host: username
+                        }
+                      })
+                      .then(call => {
+                          if (!call) {
+                            return res.status(500).send({ message: "An error occured." });
+                          }
+                          res.render('viewer',{
+                            roomId:username,
+                            id: user.id,
+                            username: user.username,
+                            email: user.email,
+                            roles: authorities,
+                            accessToken: req.cookies['x-access-token'],
+                            callid: call.id
+                           });
+                            
+                        })
+                });
+              });
+              }
+           });
+                  
+          }
+          else{
+            return res.status(403).send({ message: "User in call now." });
+          }
+          
+           
+        })
+        
+       app.get("/delcall/:id" ,authJwt.verifyToken, (req, res) => { 
+        var id = req.params.id;
+            Call.destroy({
+              where: {
+              id:id}
+            })
+            return res.status(200).send({ message: "Deleted successfully" });
+
+       })
       //var room = req.body.room;
-      res.render('viewer', { roomId: username, guestuser: guestuser })
+      
   })
-    
-    app.get('/mainroom/:username', authJwt.verifyToken, (req, res) => {
-        res.render('mainroom', { roomId: req.params.username })
+    app.get("")
+    app.post('/mainroom/', authJwt.verifyToken, (req, res) => {
+      jwt.verify(req.cookies['x-access-token'],config.secret , function(err, decodedToken) {
+        if(err) { /* handle token err */ }
+        else {
+          console.log(decodedToken);
+          User.findOne({
+            where: {
+              id: decodedToken.id
+            }
+          })
+          .then(user => {
+              if (!user) {
+                return res.status(404).send({ message: "User Not found." });
+              }
+        
+              var authorities = [];
+              user.getRoles().then(roles => {
+                for (let i = 0; i < roles.length; i++) {
+                  authorities.push("ROLE_" + roles[i].name.toUpperCase());
+                }});
+             res.render('mainroom',{
+                 roomId:user.username,
+                 id: user.id,
+                 username: user.username,
+                 email: user.email,
+                 roles: authorities,
+                 accessToken: req.cookies['x-access-token']
+               });
+            
+        });
+        }
+     });
+          
       })
       
      app.use(express.static(path.join(__dirname, '..','public')))
