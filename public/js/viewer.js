@@ -4,10 +4,10 @@ let constraints = {
   audio: true,
   video: {
       width: {
-          max: 300
+          max: 250
       },
       height: {
-          max: 300
+          max: 250
       }
   }
 }
@@ -58,8 +58,8 @@ const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 const myVideogrid = document.getElementById('grid2');
 const myVideo = document.createElement('video');
 myVideo.setAttribute("onclick", "openFullscreen(this)");
-
-myVideo.setAttribute("style",'height:400px!important;width:350px!important;')
+myVideo.id= "myvideo";
+myVideo.setAttribute("style",'width:300px!important;')
 myVideogrid.append(myVideo);
 myVideo.muted = true
 const peers = {}
@@ -126,8 +126,8 @@ function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
-
-  video.setAttribute("style",'height:400px!important;width:350px!important;')
+  
+  video.setAttribute("style",'width:300px!important;')
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream)
   })
