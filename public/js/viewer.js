@@ -110,6 +110,7 @@ navigator.mediaDevices.getUserMedia({
         //addVideoStream(video, userVideoStream)
     })
   })
+  
   socket.on('kickuser', userId => {
     alert("Çağrı sonlandırıldı");
     window.location.href = "/";
@@ -127,8 +128,9 @@ function playsound()
     audio.play();
 } 
  socket.on('user-connected', userId => {
-    console.log("user-connected");
-    playsound();
+  console.log("user-connected");
+  
+  playsound();
     connectToNewUser(userId, stream)
   })
 })
@@ -164,6 +166,8 @@ myPeer.on('open', id => {
 
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
+  
+ 
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
   
@@ -212,7 +216,7 @@ function openFullscreen(myVideo) {
       elem.msRequestFullscreen();
     }
   }
-
+  
 socket.emit('joining msg', name);
 
     		$('form').submit(function(e) {

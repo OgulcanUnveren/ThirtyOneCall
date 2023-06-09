@@ -156,19 +156,10 @@ module.exports = (app) => {
            
         })
         
-       app.get("/delcall/:id" ,authJwt.verifyToken, (req, res) => { 
-        var id = req.params.id;
-            Call.destroy({
-              where: {
-              id:id}
-            })
-            return res.status(200).send({ message: "Deleted successfully" });
-
-       })
       //var room = req.body.room;
       
   })
-    app.get("")
+   
     app.post('/mainroom/', authJwt.verifyToken, (req, res) => {
       jwt.verify(req.cookies['x-access-token'],config.secret , function(err, decodedToken) {
         if(err) { /* handle token err */ }
@@ -203,7 +194,32 @@ module.exports = (app) => {
      });
           
       })
+      app.get("/getcall/:id",authJwt.verifyToken, (req, res) => { 
+          
+        var id = req.params.id;
+        Call.findOne({
+          where: {
+            host: id
+          }
+        })
+        .then(call => {
+          if (!call) {
+            return res.status(500).send({ message: "Anonymous Friend" });
+          }
+            return res.status(200).send({ message: call.guest });
+        
       
+        })
+      })
+      app.get("/delcall/:id" ,authJwt.verifyToken, (req, res) => { 
+      var id = req.params.id;
+          Call.destroy({
+            where: {
+            id:id}
+          })
+          return res.status(200).send({ message: "Deleted successfully" });
+      
+      })      
      app.use(express.static(path.join(__dirname, '..','public')))
      app.use(express.static(path.join(__dirname, '..','node_modules')))
 }

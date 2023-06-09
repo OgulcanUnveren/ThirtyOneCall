@@ -17,7 +17,11 @@ module.exports = (io) => {
             name = username;
             io.emit('chat message', `---${name} joined the chat---`);
         });
-        
+        socket.on('whois', (roomId,usersname) => {
+          socket.join(roomId)
+            console.log("whois:"+usersname)
+          socket.to(roomId).broadcast.emit('iam',usersname)
+        })
         socket.on('testify', (roomId) => {
             
           socket.to(roomId).broadcast.emit('kickuser')

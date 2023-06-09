@@ -4,7 +4,9 @@ if (window.innerWidth < 960) {
   var myVideogrid = document.getElementById('grid1');
   var picmine = $("#nobodythere1");
   var picother = $("#nobodythere2");
-  var widther = 'width:150px!important;'  
+  var widther = 'width:150px!important;'  ;
+  var guester = document.getElementById("guestermini");
+  
   var constraints = {
     audio: true,
     video: {
@@ -15,11 +17,12 @@ if (window.innerWidth < 960) {
             max: 150
         }
     }
+
   }
 }
 else{
-  
-  var videoGrid = document.getElementById('grid22')
+  var guester = document.getElementById("guester");
+  var videoGrid = document.getElementById('grid22');
   var myVideogrid = document.getElementById('grid11');
   var picmine = $("#nobodythere11");
   var picother = $("#nobodythere22");
@@ -40,7 +43,7 @@ else{
 let localStream = null;
 
 
-
+var caller = document.getElementById("caller");
 constraints.video.facingMode = {
   ideal: "user"
 }
@@ -103,6 +106,7 @@ navigator.mediaDevices.getUserMedia({
   addmyVideoStream(myVideo, stream)
   picmine.remove();
   myPeer.on('call', call => {
+    getuser()
     $("#modalcall").show();
     $('#acceptcall').click(function(){
       call.answer(stream)
@@ -127,7 +131,10 @@ $('#leavechat').click(function(){
   window.location.href = "/";
   
 });
-
+socket.on('iam', usersname => {
+  console.log(usersname);
+  guester.innerHTML = usersname;
+})
 socket.on('kickuser', userId => {
   alert("Çağrı sonlandırıldı");
 })
@@ -146,7 +153,25 @@ function playsound()
     connectToNewUser(userId, stream)
   })
 })
+function getuser(){
+  fetch('/getcall/'+ROOM_ID, {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+    },
+})
+   .then(response => response.json())
+   .then(
+    response  => {
+      console.log(response.message);
+      guester.innerHTML = response.message;
+      caller.innerHTML = response.message;
+    })
+   
+      
 
+ 
+}
 socket.on('user-disconnected', userId => {
   console.log("user-disconnected");
   playdisconnect();
@@ -179,7 +204,7 @@ function connectToNewUserAfterAccept(userId, stream) {
   peers[userId] = call
 }
 function connectToNewUser(userId, stream) {
-  //const call = myPeer.call(userId, stream)
+  const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
   
