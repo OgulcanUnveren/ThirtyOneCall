@@ -5,6 +5,17 @@ if (window.innerWidth < 960) {
   var picmine = $("#nobodythere1");
   var picother = $("#nobodythere2");
   var widther = 'width:150px!important;'  
+  var constraints = {
+    audio: true,
+    video: {
+        width: {
+            max: 150
+        },
+        height: {
+            max: 150
+        }
+    }
+  }
 }
 else{
   
@@ -13,19 +24,20 @@ else{
   var picmine = $("#nobodythere11");
   var picother = $("#nobodythere22");
   var widther = 'width:300px!important;'  
+  var constraints = {
+    audio: true,
+    video: {
+        width: {
+            max: 250
+        },
+        height: {
+            max: 250
+        }
+    }
+  }
+  
 }
 let localStream = null;
-let constraints = {
-  audio: true,
-  video: {
-      width: {
-          max: 250
-      },
-      height: {
-          max: 250
-      }
-  }
-}
 
 
 
@@ -91,14 +103,35 @@ navigator.mediaDevices.getUserMedia({
   addmyVideoStream(myVideo, stream)
   picmine.remove();
   myPeer.on('call', call => {
-    
-    call.answer(stream)
+    $("#modalcall").show();
+    $('#acceptcall').click(function(){
+      call.answer(stream)
     const video = document.createElement('video')
+    connectToNewUserAfterAccept(localStorage.getItem("userid"),stream);
     call.on('stream', userVideoStream => {
+      $("#modalcall").css("display","none");
       console.log("user-cam-activated");
       playsound();        
-        addVideoStream(video, userVideoStream)
+        //addVideoStream(video, userVideoStream)
     })
+  });
+  $('#denycall').click(function(){
+    $("#modalcall").css("display","none");
+    socket.emit('testify', ROOM_ID)
+    
+});
+
+$('#leavechat').click(function(){
+  socket.emit('testify', ROOM_ID)
+  alert("Çağrı sonlandırıldı");
+  window.location.href = "/";
+  
+});
+
+socket.on('kickuser', userId => {
+  alert("Çağrı sonlandırıldı");
+})
+    
   })
 function playsound()
 {
@@ -106,8 +139,10 @@ function playsound()
     audio.play();
 } 
  socket.on('user-connected', userId => {
+    window.location.reload()
     console.log("user-connected");
     playsound();
+    localStorage.setItem("userid",userId);
     connectToNewUser(userId, stream)
   })
 })
@@ -128,15 +163,30 @@ myPeer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id)
 })
 
-function connectToNewUser(userId, stream) {
+function connectToNewUserAfterAccept(userId, stream) {
   const call = myPeer.call(userId, stream)
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
   
   video.setAttribute("style",widther)
   call.on('stream', userVideoStream => {
-    addVideoStream(video, userVideoStream)
+   addVideoStream(video, userVideoStream)
+})
+  call.on('close', () => {
+    video.remove()
   })
+
+  peers[userId] = call
+}
+function connectToNewUser(userId, stream) {
+  //const call = myPeer.call(userId, stream)
+  const video = document.createElement('video')
+  video.setAttribute("onclick", "openFullscreen(this)");
+  
+  video.setAttribute("style",widther)
+  //call.on('stream', userVideoStream => {
+   // addVideoStream(video, userVideoStream)
+  //})
   call.on('close', () => {
     video.remove()
   })

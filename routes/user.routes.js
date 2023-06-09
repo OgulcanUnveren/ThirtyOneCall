@@ -70,6 +70,9 @@ module.exports = (app) => {
         }
      });
     });
+    app.get("/sockettest",function(req,res){
+      socket.emit("")
+    })
     app.post("/call", authJwt.verifyToken,function(req, res){
       //this is a callback function
       var username = req.body.username;

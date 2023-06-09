@@ -656,7 +656,23 @@ a {
 </head>
 
 <body onbeforeunload="delcal()">
-
+    <div class="modal" style="display: none;" id="modalcall" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title">Ouch! Somebody is callin' you</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to do the right thing and accept call.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" id="acceptcall" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-danger" id="denycall">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
    
 
   
@@ -667,7 +683,7 @@ a {
         <div class="app-container">
            
            <div class="left-side">
-            
+             
              <button class="mode-switch">
                 <svg class="sun" fill="none" stroke="#fbb046" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-sun" viewBox="0 0 24 24"><defs/><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
            <svg class="moon" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-moon" viewBox="0 0 24 24"><defs/><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -688,8 +704,9 @@ a {
                <button href="#" class="video-action-button maximize" onclick="openFullscreen(document.getElementById('myvideo'))">
                 
                </button>
-               <button onclick="switchMedia()">Switch</button>
-               <button onclick="showorhidechat()">Live chat</button>
+               <button class="btn btn-success" onclick="switchMedia()">Switch</button>
+               <button  class="btn btn-info" onclick="showorhidechat()">Live chat</button>
+               <button  class="btn btn-danger" id="leavechat">Leave</button>
                
              </div>
            </div>

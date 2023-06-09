@@ -8,6 +8,7 @@ const Call = db.call;
 var name;
 module.exports = (io) => {
     io.on('connection', socket => {
+      
         socket.on('join-room', (roomId, userId) => {
           socket.join(roomId)
           socket.to(roomId).broadcast.emit('user-connected', userId)
@@ -17,6 +18,10 @@ module.exports = (io) => {
             io.emit('chat message', `---${name} joined the chat---`);
         });
         
+        socket.on('testify', (roomId) => {
+            
+          socket.to(roomId).broadcast.emit('kickuser')
+        })
         socket.on('disconnect', () => {
           console.log('user disconnected');
           io.emit('chat message', `---${name} left the chat---`);
@@ -28,12 +33,12 @@ module.exports = (io) => {
           console.log("Deleted chat");
         });
 
-
+        
         
         socket.on('chat message', (msg) => {
           socket.broadcast.emit('chat message', msg);         //sending message to all except the sender
         });
-      
+       
           socket.on('disconnect', () => {
             socket.to(roomId).broadcast.emit('user-disconnected', userId)
           })

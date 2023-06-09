@@ -1,22 +1,9 @@
 const socket = io('/')
 let localStream = null;
-let constraints = {
-  audio: true,
-  video: {
-      width: {
-          max: 250
-      },
-      height: {
-          max: 250
-      }
-  }
-}
 
 
 
-constraints.video.facingMode = {
-  ideal: "user"
-}
+
 
 
 if (window.innerWidth < 960) {
@@ -24,7 +11,18 @@ if (window.innerWidth < 960) {
   var myVideogrid = document.getElementById('grid2');
   var picmine = $("#nobodythere2");
   var picother = $("#nobodythere1");
-  var widther = 'width:150px!important;'  
+  var widther = 'width:150px!important;height:150px!important;'  
+  var constraints = {
+    audio: true,
+    video: {
+        width: {
+            max: 150
+        },
+        height: {
+            max: 150
+        }
+    }
+  }
 }
 else{
   
@@ -33,9 +31,23 @@ else{
   var picmine = $("#nobodythere22");
   var picother = $("#nobodythere11");
   var widther = 'width:300px!important;'  
+  var constraints = {
+    audio: true,
+    video: {
+        width: {
+            max: 250
+        },
+        height: {
+            max: 250
+        }
+    }
+  }
+  
 }
 
-
+constraints.video.facingMode = {
+  ideal: "user"
+}
 
 const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 {url:'stun:stun.ekiga.net'},
@@ -76,7 +88,7 @@ const myPeer = new Peer(undefined, {url:'stun:stun01.sipphone.com'},
 const myVideo = document.createElement('video');
 myVideo.setAttribute("onclick", "openFullscreen(this)");
 myVideo.id= "myvideo";
-myVideo.setAttribute("style",'width:300px!important;')
+myVideo.setAttribute("style",widther)
 myVideogrid.append(myVideo);
 myVideo.muted = true
 const peers = {}
@@ -95,9 +107,20 @@ navigator.mediaDevices.getUserMedia({
     call.on('stream', userVideoStream => {
       console.log("user-cam-activated");
       playsound();        
-        addVideoStream(video, userVideoStream)
+        //addVideoStream(video, userVideoStream)
     })
   })
+  socket.on('kickuser', userId => {
+    alert("Çağrı sonlandırıldı");
+    window.location.href = "/";
+  })
+  $('#leavechat').click(function(){
+    socket.emit('testify', ROOM_ID)
+    alert("Çağrı sonlandırıldı");
+    window.location.href = "/";
+    
+  });
+  
 function playsound()
 {
   var audio = new Audio('/ring.mp3');
@@ -144,7 +167,7 @@ function connectToNewUser(userId, stream) {
   const video = document.createElement('video')
   video.setAttribute("onclick", "openFullscreen(this)");
   
-  video.setAttribute("style",'width:300px!important;')
+  video.setAttribute("style",widther)
   call.on('stream', userVideoStream => {
     addVideoStream(video, userVideoStream)
   })
