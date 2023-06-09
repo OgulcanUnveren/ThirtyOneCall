@@ -1,5 +1,5 @@
 # ThirtyOneCall
-Simple One to One Video Call application with WebRTC and NodeJS,works with one link.
+Simple One to One Video Call application with WebRTC and NodeJS
 
 ## Features
 Video and audio call with webcam,socket chat
