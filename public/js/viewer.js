@@ -11,8 +11,10 @@ if (window.innerWidth < 960) {
   var myVideogrid = document.getElementById('grid2');
   var picmine = $("#nobodythere2");
   var picother = $("#nobodythere1");
-  var widther = 'width:150px!important;height:150px!important;'  
+  var widther = 'width:150px!important;height:150px!important;display:block!important;'  
+  var video = document.getElementById('othervideo1')
   var constraints = {
+  
     audio: true,
     video: {
         width: {
@@ -25,12 +27,12 @@ if (window.innerWidth < 960) {
   }
 }
 else{
-  
+  var video = document.getElementById('othervideo11')
   var videoGrid = document.getElementById('grid11')
   var myVideogrid = document.getElementById('grid22');
   var picmine = $("#nobodythere22");
   var picother = $("#nobodythere11");
-  var widther = 'width:300px!important;'  
+  var widther = 'width:300px!important;display:block!important'  
   var constraints = {
     audio: true,
     video: {
@@ -103,11 +105,11 @@ navigator.mediaDevices.getUserMedia({
   myPeer.on('call', call => {
     
     call.answer(stream)
-    const video = document.createElement('video')
+    
     call.on('stream', userVideoStream => {
       console.log("user-cam-activated");
       playsound();        
-        //addVideoStream(video, userVideoStream)
+      addVideoStream(video, userVideoStream)
     })
   })
   
@@ -131,7 +133,7 @@ function playsound()
   console.log("user-connected");
   
   playsound();
-    connectToNewUser(userId, stream)
+    connectToNewUser(userId, stream,video)
   })
 })
 function delcal(){
@@ -164,11 +166,11 @@ myPeer.on('open', id => {
   socket.emit('join-room', ROOM_ID, id)
 })
 
-function connectToNewUser(userId, stream) {
+function connectToNewUser(userId, stream,video) {
   const call = myPeer.call(userId, stream)
   
  
-  const video = document.createElement('video')
+  
   video.setAttribute("onclick", "openFullscreen(this)");
   
   video.setAttribute("style",widther)
@@ -200,7 +202,7 @@ function addVideoStream(video, stream) {
   video.addEventListener('loadedmetadata', () => {
     video.play()
   })
-  videoGrid.append(video)
+  //videoGrid.append(video)
 }
 function openFullscreen(myVideo) {
     console.log("hitting")
@@ -260,7 +262,7 @@ socket.emit('joining msg', name);
               localStream = stream
               localVideo.srcObject = stream
       
-              updateButtons()
+              
           })
       }
       
@@ -285,12 +287,12 @@ socket.emit('joining msg', name);
               localVideo.srcObject = localStream
               socket.emit('removeUpdatePeer', '')
           })
-          updateButtons()
+          
       }
       function toggleMute() {
         for (let index in localStream.getAudioTracks()) {
             localStream.getAudioTracks()[index].enabled = !localStream.getAudioTracks()[index].enabled
-            muteButton.innerText = localStream.getAudioTracks()[index].enabled ? "Unmuted" : "Muted"
+   
         }
     }
     /**
@@ -299,14 +301,7 @@ socket.emit('joining msg', name);
     function toggleVid() {
         for (let index in localStream.getVideoTracks()) {
             localStream.getVideoTracks()[index].enabled = !localStream.getVideoTracks()[index].enabled
-            vidButton.innerText = localStream.getVideoTracks()[index].enabled ? "Video Enabled" : "Video Disabled"
+            
         }
     }
-    function updateButtons() {
-      for (let index in localStream.getVideoTracks()) {
-          vidButton.innerText = localStream.getVideoTracks()[index].enabled ? "Video Enabled" : "Video Disabled"
-      }
-      for (let index in localStream.getAudioTracks()) {
-          muteButton.innerText = localStream.getAudioTracks()[index].enabled ? "Unmuted" : "Muted"
-      }
-  }
+    

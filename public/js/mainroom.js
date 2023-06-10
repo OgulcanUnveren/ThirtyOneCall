@@ -116,7 +116,7 @@ navigator.mediaDevices.getUserMedia({
       $("#modalcall").css("display","none");
       console.log("user-cam-activated");
       playsound();        
-        //addVideoStream(video, userVideoStream)
+       // addVideoStream(video, userVideoStream)
     })
   });
   $('#denycall').click(function(){
@@ -202,6 +202,7 @@ function connectToNewUserAfterAccept(userId, stream) {
   })
 
   peers[userId] = call
+  localStorage.setItem("useridenti",userId);
 }
 function connectToNewUser(userId, stream) {
   const call = myPeer.call(userId, stream)
@@ -284,34 +285,106 @@ socket.emit('joining msg', name);
           localVideo.srcObject = null
           navigator.mediaDevices.getUserMedia(constraints).then(stream => {
       
-              for (let socket_id in peers) {
-                  for (let index in peers[socket_id].streams[0].getTracks()) {
-                      for (let index2 in stream.getTracks()) {
-                          if (peers[socket_id].streams[0].getTracks()[index].kind === stream.getTracks()[index2].kind) {
-                              peers[socket_id].replaceTrack(peers[socket_id].streams[0].getTracks()[index], stream.getTracks()[index2], peers[socket_id].streams[0])
-                              break;
-                          }
-                      }
-                  }
-              }
+              
       
               localStream = stream
               localVideo.srcObject = stream
       
-              updateButtons()
+              //updateButtons()
           })
       }
-      
+      $('#sharescreen').click(function(){
+        callEm();
+      }) 
+      $('#sharecam').click(function(){
+        sharecam();
+      })
+
       /**
        * Enable screen share
        */
+      function callEm(){
+        var userId = localStorage.getItem("useridenti")
+         var displayMediaOptions = {
+           video: {
+               cursor: "always"
+           },
+           audio: false
+       };
+       
+       
+           navigator.mediaDevices.getDisplayMedia(displayMediaOptions).then(stream => {
+            localStream = stream;
+            localVideo = myVideo;
+            addmyVideoStream(myVideo, stream)
+            picmine.remove();
+            myPeer.call(userId, stream)
+            myPeer.on('call', call => {
+              getuser()
+              $("#modalcall").show();
+              $('#acceptcall').click(function(){
+                call.answer(stream)
+              const video = document.createElement('video')
+              connectToNewUserAfterAccept(localStorage.getItem("userid"),stream);
+              call.on('stream', userVideoStream => {
+                $("#modalcall").css("display","none");
+                console.log("user-cam-activated");
+                playsound();        
+                addVideoStream(video, userVideoStream)
+              })
+            });
+                     
+           
+           })
+          })
+        }
+        function sharecam(){
+          var userId = localStorage.getItem("useridenti")
+           var displayMediaOptions = {
+             video: {
+                 cursor: "always"
+             },
+             audio: false
+         };
+         
+         
+         navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true
+        }).then(stream => {
+              localStream = stream;
+              localVideo = myVideo;
+              addmyVideoStream(myVideo, stream)
+              picmine.remove();
+              myPeer.call(userId, stream)
+              myPeer.on('call', call => {
+                getuser()
+                $("#modalcall").show();
+                $('#acceptcall').click(function(){
+                  call.answer(stream)
+                const video = document.createElement('video')
+                connectToNewUserAfterAccept(localStorage.getItem("userid"),stream);
+                call.on('stream', userVideoStream => {
+                  $("#modalcall").css("display","none");
+                  console.log("user-cam-activated");
+                  playsound();        
+                  addVideoStream(video, userVideoStream)
+                })
+              });
+                       
+             
+             })
+            })
+          }
+        
       function setScreen() {
+        userId = localStorage.getItem("useridenti")
           navigator.mediaDevices.getDisplayMedia().then(stream => {
-              for (let socket_id in peers) {
-                  for (let index in peers[socket_id].streams[0].getTracks()) {
+              for (let userId in peers) {
+                  for (let index in peers[userId].streams.getTracks()) {
                       for (let index2 in stream.getTracks()) {
-                          if (peers[socket_id].streams[0].getTracks()[index].kind === stream.getTracks()[index2].kind) {
-                              peers[socket_id].replaceTrack(peers[socket_id].streams[0].getTracks()[index], stream.getTracks()[index2], peers[socket_id].streams[0])
+                          if (peers[userId].streams.getTracks()[index].kind === stream.getTracks()[index2].kind) {
+                              peers[userId].replaceTrack(peers[userId].streams.getTracks()[index], stream.getTracks()[index2], peers[userId].streams)
                               break;
                           }
                       }
@@ -321,14 +394,15 @@ socket.emit('joining msg', name);
               localStream = stream
       
               localVideo.srcObject = localStream
+              
               socket.emit('removeUpdatePeer', '')
           })
-          updateButtons()
+          //updateButtons()
       }
       function toggleMute() {
         for (let index in localStream.getAudioTracks()) {
             localStream.getAudioTracks()[index].enabled = !localStream.getAudioTracks()[index].enabled
-            muteButton.innerText = localStream.getAudioTracks()[index].enabled ? "Unmuted" : "Muted"
+           // muteButton.innerText = localStream.getAudioTracks()[index].enabled ? "Unmuted" : "Muted"
         }
     }
     /**
@@ -337,14 +411,7 @@ socket.emit('joining msg', name);
     function toggleVid() {
         for (let index in localStream.getVideoTracks()) {
             localStream.getVideoTracks()[index].enabled = !localStream.getVideoTracks()[index].enabled
-            vidButton.innerText = localStream.getVideoTracks()[index].enabled ? "Video Enabled" : "Video Disabled"
+            //vidButton.innerText = localStream.getVideoTracks()[index].enabled ? "Video Enabled" : "Video Disabled"
         }
     }
-    function updateButtons() {
-      for (let index in localStream.getVideoTracks()) {
-          vidButton.innerText = localStream.getVideoTracks()[index].enabled ? "Video Enabled" : "Video Disabled"
-      }
-      for (let index in localStream.getAudioTracks()) {
-          muteButton.innerText = localStream.getAudioTracks()[index].enabled ? "Unmuted" : "Muted"
-      }
-  }
+    
