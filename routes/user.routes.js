@@ -14,6 +14,7 @@ const { authJwt } = require("../middleware");
 const config = require("../config/auth.config");
 const db = require("../models");
 const Call = db.call;
+const Room = db.room;
 const User = db.user;
 const Role = db.role;
 
@@ -211,7 +212,102 @@ module.exports = (app) => {
       
         })
       })
-      app.get("/delcall/:id" ,authJwt.verifyToken, (req, res) => { 
+      app.get("/onelinkcreateroom",function (req,res) {
+        res.render("createroom");
+       })
+      
+    app.post("/onelinkcreateroom",function (req,res) {
+       var room = req.body.room
+       var password = req.body.password
+       var link = uuidV4()
+       if(room && password){
+          Room.create({
+            roomname:room,
+            password:password,
+            link: link
+          }).then(room => {
+            //return res.status(200).send({ message: "https:///onelinkroom/"+link+"/"+password });
+             res.redirect("/onelinkroom/"+link+"/"+password)
+          })
+       }
+    })
+    app.get("/onelinkmain/:room/:password",function (req,res){
+      var room = req.params.room
+      var password = req.params.password
+      Room.findOne({
+        where: {
+          link: room,
+        }
+      }).then(roomer => {
+        res.render('mainroom',{
+          roomId: roomer.roomname,
+          id: password,
+          username: "Host",
+
+
+
+        });
+  
+      })
+      
+    }) 
+    app.get("/onelinkviewer/:room/:password",function (req,res){
+      var room = req.params.room
+      var password = req.params.password
+      Room.findOne({where: {link : room }})
+      .then(roomer => {
+        Call.findOne({
+          where: {
+            host: room
+          }
+        })
+        .then(caller => {
+            if (!caller) {
+              return res.status(500).send({ message: "An error occured." });
+            }
+            res.render('viewer',{
+              roomId:roomer.roomname,
+              id: password,
+              username: "You",
+              callid: caller.id
+             });
+              
+          })
+        
+      })
+    }) 
+    app.get("/onelinkroom/:room/:password",function (req,res){
+      var room = req.params.room
+      var password = req.params.password
+      if(room && password){
+
+        Room.findOne({where: {link : room }})
+        .then(roomer => {
+          if (!roomer) {
+            return res.status(403).send({ message: "No room like  that" });
+          }
+          Call.findOne({
+            where : {
+              host:room
+            }
+          }).then(call => {
+            if(!call){
+              Call.create({
+                host:room,
+                guest:"onelink",
+              }).then(callers => {
+                console.log(callers);
+                res.redirect("/onelinkmain"+room+"/"+password)
+              })
+              
+              }
+            
+              res.redirect("/onelinkviewer/"+room+"/"+password)
+          })
+        })
+      }
+    })
+    app.get("/delcall/:id" ,authJwt.verifyToken, (req, res) => { 
       var id = req.params.id;
           Call.destroy({
             where: {
