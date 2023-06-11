@@ -13,6 +13,10 @@ Video and audio call with webcam,socket chat
 ## Usage
 
 ### Generate self-signed certificate or delete key feature(websockets and webrtc only work with ssl on modern browsers)
+or
+### Create an ngrok account and put/copy your auth-token to token field config/auth.config.js. 
+
+## Then 
 
 npm install
 
