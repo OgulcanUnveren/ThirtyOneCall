@@ -1,3 +1,4 @@
 module.exports = {
-  secret: "NEVIZADEGECELERI"
+  secret: "NEVIZADEGECELERI",
+  token: ""
 };

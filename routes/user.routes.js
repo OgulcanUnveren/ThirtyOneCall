@@ -30,14 +30,14 @@ module.exports = (app) => {
 // parse application/json
     app.use(bodyParser.json())
     // redirect http traffic to https traffic
-    app.use('*', (req, res, next) => {
-        if(!req.socket.encrypted){
-            console.log('unsecure connection: redirecting..')
-            res.redirect('https://' + req.headers.host + req.path)
-        } else {
-            next()
-        }
-    })
+    // app.use('*', (req, res, next) => {
+    //     if(!req.socket.encrypted){
+    //         console.log('unsecure connection: redirecting..')
+    //         res.redirect('https://' + req.headers.host + req.path)
+    //     } else {
+    //         next()
+    //     }
+    // })
     
     app.get("/", authJwt.verifyToken, function(req,res,next) {
       jwt.verify(req.cookies['x-access-token'],config.secret , function(err, decodedToken) {
