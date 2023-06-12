@@ -1,9 +1,30 @@
 const db = require("../models");
 const ROLES = db.ROLES;
 const User = db.user;
-
+const validator = require("email-validator");
 checkDuplicateUsernameOrEmail = (req, res, next) => {
   // Username
+
+  try {
+    var validatiom =  validator.validate(req.body.email);
+    console.log(validatiom)
+    if(!validatiom){
+      res.status(400).send({
+        message: "Failed! Wrong email type"
+      });
+    }
+    
+
+  } catch (error) {
+    res.status(400).send({
+      message: error
+    });
+    
+    // Expected output: ReferenceError: nonExistentFunction is not defined
+    // (Note: the exact output may be browser-dependent)
+  }
+
+  
   User.findOne({
     where: {
       username: req.body.username
