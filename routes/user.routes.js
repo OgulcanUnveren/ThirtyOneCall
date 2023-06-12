@@ -297,12 +297,18 @@ module.exports = (app) => {
                 guest:"onelink",
               }).then(callers => {
                 console.log(callers);
-                res.redirect("/onelinkmain"+room+"/"+password)
+                res.render("onelinkgate",{
+                  mainroom: "https://"+req.headers.host+"/onelinkmain/"+room+"/"+password,
+                  guestroom: "https://"+req.headers.host+"/onelinkviewer/"+room+"/"+password
+                })
               })
               
               }
             
-              res.redirect("/onelinkviewer/"+room+"/"+password)
+              res.render("onelinkgate",{
+                mainroom: "https://"+req.headers.host+"/onelinkmain/"+room+"/"+password,
+                guestroom: "https://"+req.headers.host+"/onelinkviewer/"+room+"/"+password
+              })
           })
         })
       }

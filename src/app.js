@@ -78,6 +78,6 @@ httpsServer.listen(port, () => {
 })
 
 const ngrok = require("@ngrok/ngrok");
-ngrok.connect({addr: port,authtoken:authtokenFromEnv()}).then((url) => {
-  console.log(`Your URL is: ${url}`);
-});
+ ngrok.connect({addr: port,authtoken:authtokenFromEnv()}).then((url) => {
+   console.log(`Your URL is: ${url}`);
+ });
